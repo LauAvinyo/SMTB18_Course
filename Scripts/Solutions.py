@@ -78,3 +78,35 @@ def generateMatrix(alignment):
             matrix[aa1][aa2] = math.log10(num/den) * 10
         
     return matrix
+
+def readMatrix(filename):
+    # Read the file
+    handle = open(filename, 'r')
+    content= handle.readlines()
+    handle.close()
+    
+    # Set up the matrix file
+    matrix  = {}
+    letters = []
+    numline = len(content) 
+    
+    for nl in range(XXX, XXX):
+        line = content[nl]
+        splt = line.split()
+        a = splt[XXX]
+        if a not in matrix:
+            matrix[a] = {}
+            letters.append(a)
+            
+    # Go throug the file and save the values
+    for nl in range(XXX, XXX):
+        line = content[nl]
+        splt = line.split()
+        l = len(splt)
+        aa1 = XXX
+        for a in range(XXX, XXX):
+            aa2 = letters[XXX]
+            matrix[XXX][XXX] = splt[XXX]
+            matrix[XXX][XXX] = XXX
+    
+    return matrix
