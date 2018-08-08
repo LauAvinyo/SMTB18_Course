@@ -79,34 +79,85 @@ def generateMatrix(alignment):
         
     return matrix
 
-def readMatrix(filename):
-    # Read the file
-    handle = open(filename, 'r')
-    content= handle.readlines()
-    handle.close()
+
+seqI = 'THEFASTCAT'
+seqJ = 'THEFATCAT'
+
+def pairAlignment(seqI, seqJ, matrix):
     
-    # Set up the matrix file
-    matrix  = {}
-    letters = []
-    numline = len(content) 
+    # Check that there are no gaps in this sequences
+    # I am paranoid
+    seqI.replace('-', '')
+    seqJ.replace('-', '')
+
+    # Get the length of the sequences
+    lenI=len(seqI)
+    lenJ=len(seqJ)
+
+    # Penalty for putting a gap
+    gep=-4
+
     
-    for nl in range(XXX, XXX):
-        line = content[nl]
-        splt = line.split()
-        a = splt[XXX]
-        if a not in matrix:
-            matrix[a] = {}
-            letters.append(a)
-            
-    # Go throug the file and save the values
-    for nl in range(XXX, XXX):
-        line = content[nl]
-        splt = line.split()
-        l = len(splt)
-        aa1 = XXX
-        for a in range(XXX, XXX):
-            aa2 = letters[XXX]
-            matrix[XXX][XXX] = splt[XXX]
-            matrix[XXX][XXX] = XXX
-    
-    return matrix
+    # Initiallize to zero the matrices
+    smat = [[0 for x in range(lenJ+1)] for y in range(lenI+1)]
+    tb   = [[0 for x in range(lenJ+1)] for y in range(lenI+1)]
+
+    # Base cases
+    for i in range (0, lenI+1):
+        smat[i][0]=0
+        tb[i][0]=-2
+
+    for j in range (0, lenJ+1):
+        smat[0][j]=0
+        tb[0][j]=-2
+
+    # Fill the table
+    bscore=0
+    for i in range (1, lenI+1):
+        for j in range (1, lenJ+1):
+            if seqI[i-1]!='-' and seqJ[j-1]!='-':
+                s=int(matrix[seqI[i-1]][seqJ[j-1]])
+            else:
+                s=0
+
+            Sub=smat[i-1][j-1]+s
+            Del=smat[i][j-1]+gep
+            Ins=smat[i-1][j]+gep
+
+            if Sub>Del and Sub >Ins and Sub >0:
+                smat[i][j]= Sub
+                tb  [i][j]= 0
+            elif Del>Ins and Del >0:
+                smat[i][j]= Del
+                tb[i][j]=-1
+            else:
+                smat[i][j]= Ins
+                tb[i][j]=1
+
+            if smat[i][j]>bscore:
+                bscore=smat[i][j]
+
+    # Traceback
+    alnI=''
+    alnJ=''
+    while (tb[i][j]!=-2):
+        if (tb[i][j]==0):
+            i-=1
+            j-=1
+            alnI += seqI[i]
+            alnJ += seqJ[j]
+        elif (tb[i][j]==-1):
+            j-=1
+            alnI += '-'
+            alnJ += seqJ[j]
+        elif (tb[i][j]==1):
+            i-=1
+            alnI += seqI[i]
+            alnJ += '-'
+
+
+    # This is used to reverse the sequences
+    alnI=alnI[::-1]
+    alnJ=alnJ[::-1]
+
+    return alnI, alnJ, bscore
