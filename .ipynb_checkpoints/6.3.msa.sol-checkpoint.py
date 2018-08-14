@@ -70,33 +70,33 @@ def align (seq,Igroup, Jgroup, matrix, gep):
 
 
     for i in range (1, lenI+1):
-        
-        for j in range (1, lenJ+1):
-            s=float(0)
-            nsub=float(0)
-            for ni in range (0,len(Igroup)):
-                for nj in range (0, len(Jgroup)):
-                    a1=seq[Igroup[ni]][i-1]
-                    a2=seq[Jgroup[nj]][j-1]
-                    if a1!='-' and a2!='-':
-                        s+=int(matrix[a1.upper()][a2.upper()])
-                        nsub+=1
-            if (nsub>0):
-                s/=nsub
+      for j in range (1, lenJ+1):
+        s=float(0)
+        nsub=float(0)
+        for ni in range (0,len(Igroup)):
+            for nj in range (0, len(Jgroup)):
 
-            Sub=smat[i-1][j-1]+s
-            Del=smat[i][j-1]+gep
-            Ins=smat[i-1][j]+gep
+               a1=seq[Igroup[ni]][i-1]
+               a2=seq[Jgroup[nj]][j-1]
+               if a1!='-' and a2!='-':
+                  s+=int(matrix[a1.upper()][a2.upper()])
+                  nsub+=1
+        if (nsub>0):
+           s/=nsub
 
-            if Sub>Del and Sub >Ins:
-                smat[i][j]=Sub
-                tb  [i][j]=0
-            elif Del>Ins:
-                smat[i][j]=Del
-                tb[i][j]=-1
-            else:
-                smat[i][j]=Ins
-                tb[i][j]=1
+        Sub=smat[i-1][j-1]+s
+        Del=smat[i][j-1]+gep
+        Ins=smat[i-1][j]+gep
+
+        if Sub>Del and Sub >Ins:
+            smat[i][j]=Sub
+            tb  [i][j]=0
+        elif Del>Ins:
+            smat[i][j]=Del
+            tb[i][j]=-1
+        else:
+            smat[i][j]=Ins
+            tb[i][j]=1
 
 
     #print "Optimal Score: %d\n"%(int(smat[lenI][lenJ]))
